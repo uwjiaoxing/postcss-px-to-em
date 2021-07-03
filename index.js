@@ -5,6 +5,7 @@ var DEFAULTS = {
   base: 16,
   globalEnabled: true,
   minPixelValue: 1,
+  unitPrecision: 5,
 };
 
 var enabledComment = "px-to-em enabled";
@@ -13,6 +14,12 @@ var disabledComment = "px-to-em disabled";
 function nonForcedNumericRegex(number) {
   // finds pixel values not followed by `/* force */`
   return new RegExp(number + "px(?!\\s*\\/\\*\\s*force\\s*\\*\\/)", "g");
+}
+
+function toFixed(number, precision) {
+  var multiplier = Math.pow(10, precision + 1),
+    wholeNumber = Math.floor(number * multiplier);
+  return (Math.round(wholeNumber / 10) * 10) / multiplier;
 }
 
 module.exports = postcss.plugin("postcss-px-to-em", function (opts) {
@@ -30,9 +37,10 @@ module.exports = postcss.plugin("postcss-px-to-em", function (opts) {
 
         // if the value is not forced to be pixels, let's replace any matching
         if (!matches[2] && matches[1] > opts.minPixelValue) {
+          var parsedVal = toFixed(matches[1] / opts.base, opts.unitPrecision);
           context = context.replace(
             nonForcedNumericRegex(matches[1]),
-            matches[1] / opts.base + "em"
+            parsedVal + "em"
           );
         }
       });

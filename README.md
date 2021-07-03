@@ -55,6 +55,7 @@ var options = {
   base: 16, // (Number) Base font size; 16px by default
   globalEnabled: true, // (Boolean) Set global enabled status; true by default
   minPixelValue: 1, // (Number) Set the minimum pixel value to replace; 1px by default
+  unitPrecision: 5, // (Number) The decimal numbers to allow the vw units to grow to; 5 by default
 };
 
 // Options may be supplied as the first argument, but are not required.

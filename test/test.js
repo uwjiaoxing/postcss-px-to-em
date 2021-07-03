@@ -20,6 +20,15 @@ var test = function (input, output, opts, done) {
 };
 
 describe("postcss-px-to-em", function () {
+  it("unitPrecision = 2", function (done) {
+    test(
+      "a{width: 2px;}",
+      "a{width: 0.13em;}",
+      { unitPrecision: 2, base: 16 },
+      done
+    );
+  });
+
   it("px <= minPixelValue", function (done) {
     test(
       "a{width: 2px;}",
