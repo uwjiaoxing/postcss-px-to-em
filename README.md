@@ -52,16 +52,37 @@ Plug it into your PostCSS configuration.
 
 ```js
 var options = {
-  base: 16, // Base font size; 16px by default
+  base: 16, // (Number) Base font size; 16px by default
+  globalEnabled: true, // (Boolean) Set global enabled status; true by default
+  minPixelValue: 1, // (Number) Set the minimum pixel value to replace; 1px by default
 };
 
 // Options may be supplied as the first argument, but are not required.
-postcss([require('postcss-px-to-em')(options)])
+postcss([require("postcss-px-to-em")(options)]);
+```
+
+### disable/enable the entire file
+
+Add comment `/* px-to-em disabled|enabled */` on the head of file
+
+```css
+/* px-to-em disabled */
+.foo {
+  width: 270px;
+  margin: 0 15px;
+}
+```
+
+```css
+.foo {
+  width: 270px;
+  margin: 0 15px;
+}
 ```
 
 See PostCSS docs for examples for your environment.
 
-[Bugherd]: https://macropod.com/bugherd
-[PostCSS]: https://github.com/postcss/postcss
-[ci-img]:  https://travis-ci.org/macropodhq/postcss-px-to-em.svg
-[ci]:      https://travis-ci.org/macropodhq/postcss-px-to-em
+[bugherd]: https://macropod.com/bugherd
+[postcss]: https://github.com/postcss/postcss
+[ci-img]: https://travis-ci.org/macropodhq/postcss-px-to-em.svg
+[ci]: https://travis-ci.org/macropodhq/postcss-px-to-em
