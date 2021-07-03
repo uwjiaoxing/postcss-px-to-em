@@ -6,6 +6,8 @@ var DEFAULTS = {
   globalEnabled: true,
   minPixelValue: 1,
   unitPrecision: 5,
+  include: [],
+  exclude: [],
 };
 
 var enabledComment = "px-to-em enabled";
@@ -50,15 +52,47 @@ module.exports = postcss.plugin("postcss-px-to-em", function (opts) {
   };
 
   return function (css) {
+    var file = css.source && css.source.input.file;
+    if (opts.include && file) {
+      if (Object.prototype.toString.call(opts.include) === "[object RegExp]") {
+        if (!opts.include.test(file)) return;
+      } else if (
+        Object.prototype.toString.call(opts.include) === "[object Array]" &&
+        opts.include.length
+      ) {
+        var flag = false;
+        for (var i = 0; i < opts.include.length; i++) {
+          if (opts.include[i].test(file)) {
+            flag = true;
+            break;
+          }
+        }
+        if (!flag) return;
+      }
+    }
+    if (opts.exclude && file) {
+      if (Object.prototype.toString.call(opts.exclude) === "[object RegExp]") {
+        if (opts.exclude.test(file)) return;
+      } else if (
+        Object.prototype.toString.call(opts.exclude) === "[object Array]" &&
+        opts.exclude.length
+      ) {
+        for (var j = 0; j < opts.exclude.length; j++) {
+          if (opts.exclude[j].test(file)) return;
+        }
+      }
+    }
+
     var isEnabled = false;
     var isDisabled = false;
-    css.some(function (i) {
+    css.some(function (item) {
       isEnabled =
-        isEnabled || (i.type === "comment" && i.text === enabledComment);
+        isEnabled || (item.type === "comment" && item.text === enabledComment);
       isDisabled =
-        isDisabled || (i.type === "comment" && i.text === disabledComment);
+        isDisabled ||
+        (item.type === "comment" && item.text === disabledComment);
 
-      return i.type !== "comment";
+      return item.type !== "comment";
     });
 
     ((opts.globalEnabled && !isDisabled) ||

@@ -6,9 +6,9 @@ var plugin = require("../");
 var enabledComment = "px-to-em enabled";
 var disabledComment = "px-to-em disabled";
 
-var test = function (input, output, opts, done) {
+var test = function (input, output, opts, done, from) {
   postcss([plugin(opts)])
-    .process(input, { from: undefined })
+    .process(input, { from: from })
     .then(function (result) {
       expect(result.css).to.eql(output);
       expect(result.warnings()).to.be.empty;
@@ -20,6 +20,45 @@ var test = function (input, output, opts, done) {
 };
 
 describe("postcss-px-to-em", function () {
+  it("include [/aaa/] for aaa.css", function (done) {
+    test(
+      "a{width: 200px;}",
+      "a{width: 12.5em;}",
+      { include: [/aaa/] },
+      done,
+      "aaa.css"
+    );
+  });
+  it("include [/aaa/] for bbb.css", function (done) {
+    test(
+      "a{width: 200px;}",
+      "a{width: 200px;}",
+      { include: [/aaa/] },
+      done,
+      "bbb.css"
+    );
+  });
+
+  it("exclude [/aaa/] for aaa.css", function (done) {
+    test(
+      "a{width: 200px;}",
+      "a{width: 200px;}",
+      { exclude: [/aaa/] },
+      done,
+      "aaa.css"
+    );
+  });
+
+  it("exclude [/aaa/] for bbb.css", function (done) {
+    test(
+      "a{width: 200px;}",
+      "a{width: 12.5em;}",
+      { exclude: [/aaa/] },
+      done,
+      "bbb.css"
+    );
+  });
+
   it("unitPrecision = 2", function (done) {
     test(
       "a{width: 2px;}",

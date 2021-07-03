@@ -56,6 +56,12 @@ var options = {
   globalEnabled: true, // (Boolean) Set global enabled status; true by default
   minPixelValue: 1, // (Number) Set the minimum pixel value to replace; 1px by default
   unitPrecision: 5, // (Number) The decimal numbers to allow the vw units to grow to; 5 by default
+  exclude: [], // (Regexp or Array of Regexp) Ignore some files like 'node_modules'
+  // If value is regexp, will ignore the matches files.
+  // If value is array, the elements of the array are regexp.
+  include: [], // (Regexp or Array of Regexp) If include is set, only matching files will be converted, for example, only files under src/mobile/ (include: /\/src\/mobile\//)
+  // If the value is regexp, the matching file will be included, otherwise it will be excluded.
+  // If value is array, the elements of the array are regexp.
 };
 
 // Options may be supplied as the first argument, but are not required.
